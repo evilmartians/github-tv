@@ -1,4 +1,4 @@
-# Github-TV: Forks your employees' open-source repos to organization page
+# Github-TV: Forks your colleagues' open-source repos to organization page
 
 This is just a POC.
 
