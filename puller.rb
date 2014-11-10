@@ -1,17 +1,18 @@
 require 'yaml'
 require 'fileutils'
+require 'github_api'
 
 class Puller
-  attr_accessor :projects, :org, :github_client, :dir_path
+  attr_accessor :projects, :org, :dir_path
 
-  def initialize(github_client, org, dir_path = 'tmp', projects = nil)
-    @github_client = github_client
+  def initialize(org, dir_path = 'tmp', projects = nil)
     @org = org
     @dir_path = dir_path
     @projects = projects || YAML.load(File.read(File.expand_path('../projects.yml', __FILE__)))
   end
 
-  def fork_projects
+  def fork_projects(basic_auth)
+    github_client = Github.new basic_auth: basic_auth
     projects.each do |proj|
       begin
         author, proj_name = proj.split('/')
@@ -46,5 +47,4 @@ class Puller
     FileUtils.cd '..'
     FileUtils.rm_rf dir_path
   end
-
 end
