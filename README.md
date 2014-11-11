@@ -5,8 +5,8 @@ This is just a POC.
 ## Usage
 
 ```bash
-gem install github_tv
-github_tv *path/url for config*
+gem install github-tv
+github-tv *path/url for config*
 ```
 
 Config should be in format of
