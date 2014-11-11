@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/github_tv'
+require 'io/console'
+
+config = 'github_tv.yml'
+
+unless File.exists? config
+  puts "There is no github_tv.yml in current directory, let's create one."
+  puts
+  puts 'Please authenticate yourself so we can create a token to use.'
+
+  print 'Username: '
+  username = gets.chomp
+
+  print 'Password: '
+  password = STDIN.noecho(&:gets).chomp
+  puts
+
+  client = Octokit::Client.new \
+    login: username,
+    password: password
+
+  response = client.create_authorization \
+    scopes: ['public_repo'],
+    note: "github-tv #{Time.now}"
+
+  token = response.token
+
+  print 'Organization (to mirror projects): '
+  org = gets.chomp
+
+  puts 'Input projects in format user/repo on separate lines:'
+  puts '(finish with an empty line)'
+  repos = []
+  loop do
+    repo = gets.chomp
+    break if repo.empty?
+    repos.push repo
+  end
+  
+  File.write config, YAML.dump(
+    'token'         => token,
+    'organization'  => org,
+    'repos'         => repos)
+end
+
+puts 'synchronization started'
+GithubTV.new(config).run
