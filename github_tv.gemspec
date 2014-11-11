@@ -8,6 +8,7 @@ Gem::Specification.new do |gem|
   gem.homepage      = 'https://github.com/evilmartians/github-tv'
   gem.files         = `git ls-files`.split($/)
   gem.require_paths = %w(lib)
+  gem.executables   = 'github_tv'
 
   gem.add_dependency 'octokit'
 end
