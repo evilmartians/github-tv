@@ -4,8 +4,7 @@ require 'octokit'
 class GithubTV
   attr_reader :token, :org, :repos
 
-  def initialize(path)
-    config = YAML.load_file path
+  def initialize(config)
     @token = config.fetch 'token'
     @repos = config.fetch 'repos'
     @org   = config.fetch 'organization'

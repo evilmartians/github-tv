@@ -2,13 +2,15 @@
 
 require_relative '../lib/github_tv'
 require 'io/console'
+require 'open-uri'
 
-config = 'github_tv.yml'
+config_location = ARGV.shift or abort 'Missing path/url for config'
+config = YAML.load open config_location
 
-unless File.exists? config
-  puts "There is no github_tv.yml in current directory, let's create one."
-  puts
-  puts 'Please authenticate yourself so we can create a token to use.'
+token = `git config github.tv`.chomp
+
+if token.empty?
+  puts 'Please authenticate yourself to create a token for further usage.'
 
   print 'Username: '
   username = gets.chomp
@@ -26,24 +28,8 @@ unless File.exists? config
     note: "github-tv #{Time.now}"
 
   token = response.token
-
-  print 'Organization (to mirror projects): '
-  org = gets.chomp
-
-  puts 'Input projects in format user/repo on separate lines:'
-  puts '(finish with an empty line)'
-  repos = []
-  loop do
-    repo = gets.chomp
-    break if repo.empty?
-    repos.push repo
-  end
-  
-  File.write config, YAML.dump(
-    'token'         => token,
-    'organization'  => org,
-    'repos'         => repos)
+  `git config --global github.tv #{token}`
 end
 
-puts 'synchronization started'
+config['token'] = token
 GithubTV.new(config).run
