@@ -1,6 +1,6 @@
 Gem::Specification.new do |gem|
   gem.name          = 'github_tv'
-  gem.version       = '0.1'
+  gem.version       = '0.2'
   gem.license       = 'MIT'
   gem.authors       = ['brainopia', 'gazay']
   gem.email         = 'brainopia@evilmartians.com'
