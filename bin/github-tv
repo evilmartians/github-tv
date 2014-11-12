@@ -4,6 +4,16 @@ require_relative '../lib/github-tv'
 require 'io/console'
 require 'open-uri'
 
+def create_token(client, tfa=nil)
+  opts = {
+    scopes: ['public_repo'],
+    note: "github-tv #{Time.now}",
+    note_url: 'https://github.com/evilmartians/github-tv'
+  }
+  opts.merge!(headers: { 'X-GitHub-OTP' => tfa }) if tfa
+  client.create_authorization opts
+end
+
 config_location = ARGV.shift or abort 'Missing path/url for config'
 config = YAML.load open config_location
 
@@ -23,9 +33,13 @@ if token.empty?
     login: username,
     password: password
 
-  response = client.create_authorization \
-    scopes: ['public_repo'],
-    note: "github-tv #{Time.now}"
+  response = begin
+               create_token(client)
+             rescue Octokit::OneTimePasswordRequired
+               print 'Two-factor authentication code: '
+               tfa = gets.chomp
+               create_token(client, tfa)
+             end
 
   token = response.token
   `git config --global github.tv #{token}`
