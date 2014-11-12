@@ -21,7 +21,7 @@ repos:
 
 ## Contributors
 
-* @gazay, @brainopia
+* @gazay, @brainopia, @igas
 
 ## License
 
