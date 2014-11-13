@@ -14,10 +14,24 @@ def create_token(client, tfa=nil)
   client.create_authorization opts
 end
 
-config_location = ARGV.shift or abort 'Missing path/url for config'
-config = YAML.load open config_location
 
-token = `git config github.tv`.chomp
+
+
+config_location = ARGV.shift
+config_location ||= `git config github.tv.config`.chomp
+
+abort 'Missing path/url for config file' if config_location.empty?
+
+begin
+  config = YAML.load open config_location
+rescue Errno::ENOENT
+  abort 'Incorrect path to config file'
+rescue Psych::SyntaxError
+  abort 'Config file format is not YAML'
+end
+
+
+token = `git config github.tv.token`.chomp
 
 if token.empty?
   puts 'Please authenticate yourself to create a token for further usage.'
@@ -42,7 +56,7 @@ if token.empty?
              end
 
   token = response.token
-  `git config --global github.tv #{token}`
+  `git config --global github.tv.token #{token}`
 end
 
 config['token'] = token

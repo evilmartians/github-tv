@@ -19,6 +19,12 @@ repos:
   - user2/repo2
 ```
 
+Optionally, you can set default path/url to config file.
+
+```bash
+git config --global github.tv.config *path/url for config*
+```
+
 ## Contributors
 
 * @gazay, @brainopia, @igas
