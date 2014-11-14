@@ -27,7 +27,7 @@ git config --global github.tv.config *path/url for config*
 
 ## Contributors
 
-* @gazay, @brainopia, @igas
+* @gazay, @brainopia, @igas, @aderyabin
 
 ## License
 
